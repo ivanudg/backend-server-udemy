@@ -3,6 +3,8 @@ var express = require('express');
 var bcrypt = require('bcryptjs');
 var Usuario = require('../models/usuario');
 
+var mdAutentificacion = require('../middleweares/autenticacion');
+
 var jwt = require('jsonwebtoken');
 var SEED = require('../config/config').SEED;
 
@@ -13,6 +15,21 @@ var app = express();
 var CLIENT_ID = require('../config/config').CLIENT_ID;
 const { OAuth2Client } = require('google-auth-library');
 const client = new OAuth2Client(CLIENT_ID);
+
+// ============================================================================================
+// Renovar Token
+// ============================================================================================
+app.get('/renuevaToken', mdAutentificacion.verificaToken, (req, res) => {
+
+    // Crear token
+    var token = jwt.sign({ usuario: req.usuario }, SEED, { expiresIn: 14400 }); // 4hrs para que expire
+
+    return res.status(200).json({
+        ok: true,
+        token: token
+    });
+
+});
 
 // ============================================================================================
 // Autentificación de Google
