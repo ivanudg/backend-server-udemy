@@ -50,6 +50,42 @@ app.get('/', (req, res) => {
 });
 
 // ============================================================================================
+// Obtener un medico por el ID
+// ============================================================================================
+app.get('/:id', (req, res) => {
+
+    var id = req.params.id;
+
+    Medico.findById(id)
+        .populate('usuario', 'nombre email img')
+        .populate('hospital')
+        .exec((err, medico) => {
+
+            if (err) {
+                return res.status(500).json({
+                    ok: false,
+                    mensaje: 'Error al buscar medico',
+                    errors: err
+                });
+            }
+
+            if (!medico) {
+                return res.status(400).json({
+                    ok: false,
+                    mensaje: 'El medico con el ' + id + ' no existe',
+                    errors: { message: 'No existe un medico con ese ID' }
+                });
+            }
+
+            res.status(200).json({
+                ok: true,
+                medico: medico
+            });
+
+        });
+});
+
+// ============================================================================================
 // Actualizar medico PUT/PATCH
 // ============================================================================================
 app.put('/:id', mdAutentificacion.verificaToken, (req, res) => {
@@ -99,7 +135,7 @@ app.put('/:id', mdAutentificacion.verificaToken, (req, res) => {
 });
 
 // ============================================================================================
-// Crear un nuevo hospital
+// Crear un nuevo medico
 // ============================================================================================
 app.post('/', mdAutentificacion.verificaToken, (req, res) => {
 
