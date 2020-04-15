@@ -5,7 +5,7 @@ Este es el código necesario para establecer el backen conectado a MongoDB usand
 Para ejecutarlo es necesario reconstruir los módulos de node usnado el comando
 
 ```
-nmp install
+npm install
 ```
 
 ## Dentro de google-sigin-demo
